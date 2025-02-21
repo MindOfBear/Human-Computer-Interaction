@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCalculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+
+    <div class="flex flex-row justify-center items-center text-left mb-5">
+        <p class="text-4xl font-semibold text-gray-800 mb-2">eCalculator</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-3xl shadow-lg w-full sm:max-w-md max-w-sm">
+        <div id="display" class="bg-gray-200 text-right p-4 mb-4 rounded text-2xl font-mono">0</div>
+
+        <div class="grid grid-cols-4 gap-2">
+            <button class="col-span-2 bg-red-500 text-white py-3 rounded-md text-lg font-bold" onclick="clearDisplay()">AC</button>
+            <button class="bg-blue-500 text-white py-3 rounded-md text-lg font-bold" onclick="appendOperator('/')">÷</button>
+            <button class="bg-blue-500 text-white py-3 rounded-md text-lg font-bold" onclick="appendOperator('*')">×</button>
+
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(7)">7</button>
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(8)">8</button>
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(9)">9</button>
+            <button class="bg-blue-500 text-white py-3 rounded-md text-lg font-bold" onclick="appendOperator('-')">−</button>
+
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(4)">4</button>
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(5)">5</button>
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(6)">6</button>
+            <button class="bg-blue-500 text-white py-3 rounded-md text-lg font-bold" onclick="appendOperator('+')">+</button>
+
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(1)">1</button>
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(2)">2</button>
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(3)">3</button>
+            <button class="row-span-2 bg-green-500 text-white py-6 rounded-md text-lg font-bold" onclick="calculateResult()">=</button>
+
+            <button class="col-span-2 bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber(0)">0</button>
+            <button class="bg-gray-300 py-3 rounded-md text-lg font-bold" onclick="appendNumber('.')">.</button>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '';
+        let operator = null;
+        let previousInput = '';
+
+        function appendNumber(number) {
+            if (number === '.' && currentInput.includes('.')) return;
+            currentInput += number.toString();
+            updateDisplay();
+        }
+
+        function appendOperator(op) {
+            if (currentInput === '') return;
+            if (previousInput !== '') {
+                calculateResult();
+            }
+            operator = op;
+            previousInput = currentInput;
+            currentInput = '';
+        }
+
+        function calculateResult() {
+            let computation;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+            if (isNaN(prev) || isNaN(current)) return;
+            switch (operator) {
+                case '+': computation = prev + current; break;
+                case '-': computation = prev - current; break;
+                case '*': computation = prev * current; break;
+                case '/': computation = prev / current; break;
+                default: return;
+            }
+            currentInput = computation;
+            operator = null;
+            previousInput = '';
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            previousInput = '';
+            operator = null;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').innerText = currentInput || '0';
+        }
+    </script>
+
+</body>
+</html>
